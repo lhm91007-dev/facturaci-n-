@@ -352,6 +352,682 @@
         <div class="logo">CR</div>
         <div>
           <div class="brand-title">Facturación Costa Rica – Demo tipo Alegra</div>
+          <div class="brand-sub">Multiusuario, IVA, CAByS, XML simulado, QR y firma digital</div>
+        </div>
+      </div>
+      <div>
+        <div class="pill">
+          <span></span>
+          Lógica IVA 13% / 4% / 2% / 1% + exonerado · Demo GitHub Pages.
+        </div>
+        <div class="user-switch" style="margin-top:8px;">
+          <label style="margin:0;font-size:11px;">Emisor activo</label>
+          <select id="emisorSelector"></select>
+          <button class="btn small secondary" id="btnNuevoEmisor">+ Nuevo emisor</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Datos del emisor y cliente -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Datos de factura</div>
+          <div class="badge">Emisor + Receptor + Estado</div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Nombre del emisor</label>
+            <input id="emisorNombre" placeholder="Ej: MultidigitalCR" />
+          </div>
+          <div>
+            <label>Cédula jurídica / física</label>
+            <input id="emisorCedula" placeholder="3-101-123456" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Correo emisor</label>
+            <input id="emisorCorreo" type="email" placeholder="facturacion@empresa.com" />
+          </div>
+          <div>
+            <label>Teléfono emisor</label>
+            <input id="emisorTelefono" placeholder="+506 8888-8888" />
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px dashed rgba(55,65,81,0.9);margin:10px 0;" />
+
+        <div class="row">
+          <div>
+            <label>Nombre del cliente</label>
+            <input id="clienteNombre" placeholder="Nombre completo o razón social" />
+          </div>
+          <div>
+            <label>Cédula / N° identificación</label>
+            <input id="clienteCedula" placeholder="1-1234-5678" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Correo cliente</label>
+            <input id="clienteCorreo" type="email" placeholder="cliente@correo.com" />
+          </div>
+          <div>
+            <label>Condición de venta</label>
+            <select id="condicionVenta">
+              <option value="contado">Contado</option>
+              <option value="credito">Crédito</option>
+              <option value="apartado">Apartado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Fecha de emisión</label>
+            <input id="fechaEmision" type="date" />
+          </div>
+          <div>
+            <label>Moneda</label>
+            <select id="moneda">
+              <option value="CRC">CRC – Colones</option>
+              <option value="USD">USD – Dólares</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Número de factura</label>
+            <input id="numeroFactura" type="number" min="1" value="1" />
+          </div>
+          <div>
+            <label>Estado</label>
+            <select id="estadoFactura">
+              <option value="borrador">Borrador</option>
+              <option value="emitida">Emitida</option>
+              <option value="anulada">Anulada</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <label>Notas / referencia</label>
+          <textarea id="notas" placeholder="Ej: Servicio prestado según orden de compra #123"></textarea>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <label>Firma digital simulada</label>
+          <input id="firmaDigital" placeholder="Ej: Firmado digitalmente por MultidigitalCR" />
+        </div>
+      </section>
+
+      <!-- Items, CAByS, totales, QR -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Detalle de líneas</div>
+          <div class="badge">CAByS + IVA + QR</div>
+        </div>
+
+        <div class="row-4">
+          <div>
+            <label>Descripción</label>
+            <input id="itemDescripcion" placeholder="Ej: Soporte técnico" />
+          </div>
+          <div>
+            <label>Código CAByS</label>
+            <input id="itemCabys" placeholder="Ej: 432101010" />
+          </div>
+          <div>
+            <label>Cantidad</label>
+            <input id="itemCantidad" type="number" min="0" step="0.01" value="1" />
+          </div>
+          <div>
+            <label>Precio unitario</label>
+            <input id="itemPrecio" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Tipo de IVA</label>
+            <select id="itemIva">
+              <option value="13">13% – General</option>
+              <option value="4">4% – Reducido</option>
+              <option value="2">2% – Reducido</option>
+              <option value="1">1% – Reducido</option>
+              <option value="0">0% – Exento</option>
+            </select>
+          </div>
+          <div>
+            <label>Exonerado</label>
+            <select id="itemExonerado">
+              <option value="no">No</option>
+              <option value="si">Sí (no se cobra IVA)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn" id="btnAgregarItem">+ Agregar línea</button>
+
+        <table class="items-table" id="tablaItems">
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>CAByS</th>
+              <th>Cant.</th>
+              <th>Precio</th>
+              <th>IVA</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div class="totals">
+          <div class="totals-row">
+            <span>Subtotal (sin IVA)</span>
+            <span id="subtotal">₡0.00</span>
+          </div>
+          <div class="totals-row">
+            <span>IVA</span>
+            <span id="ivaTotal">₡0.00</span>
+          </div>
+          <div class="totals-row">
+            <span>Exonerado</span>
+            <span id="exoneradoTotal">₡0.00</span>
+          </div>
+          <div class="totals-row total">
+            <span>Total factura</span>
+            <span id="totalFactura">₡0.00</span>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn full" id="btnGuardarLocal">💾 Guardar factura (multiusuario)</button>
+        </div>
+
+        <div class="status" id="status">
+          No hay facturas guardadas aún. Se almacenan en <strong>localStorage</strong> del navegador por emisor.
+        </div>
+
+        <div class="qr-box">
+          Código QR simulado con datos clave de la factura.
+          <div><img id="qrImg" alt="QR factura" width="140" height="140" /></div>
+        </div>
+      </section>
+    </div>
+
+    <div style="margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <button class="btn secondary" id="btnImprimir">🧾 Imprimir / Guardar como PDF</button>
+      <button class="btn secondary" id="btnVerJson">🧩 Ver JSON generado</button>
+      <button class="btn secondary" id="btnVerXml">📄 Ver XML estilo Hacienda</button>
+      <button class="btn secondary" id="btnLimpiar">🧹 Limpiar formulario</button>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Facturas guardadas (por emisor)</div>
+        <button class="btn small secondary" id="btnRefrescarLista">🔄 Actualizar lista</button>
+      </div>
+      <table class="panel-table" id="tablaFacturas">
+        <thead>
+          <tr>
+            <th>Emisor</th>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    // --- Estado global ---
+    const items = [];
+    let emisores = [];
+    let emisorActivoId = null;
+
+    // --- Utilidades ---
+    function formatoMoneda(valor, moneda = "CRC") {
+      const symbol = moneda === "USD" ? "$" : "₡";
+      return symbol + Number(valor || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function cargarEmisores() {
+      emisores = JSON.parse(localStorage.getItem("emisoresCR") || "[]");
+      const selector = document.getElementById("emisorSelector");
+      selector.innerHTML = "";
+      if (emisores.length === 0) {
+        const defaultEmisor = {
+          id: Date.now(),
+          nombre: "MultidigitalCR",
+          cedula: "3-101-000000",
+          correo: "demo@multidigitalcr.com",
+          telefono: "+506 8888-8888"
+        };
+        emisores.push(defaultEmisor);
+        localStorage.setItem("emisoresCR", JSON.stringify(emisores));
+      }
+      emisores.forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e.id;
+        opt.textContent = e.nombre + " (" + e.cedula + ")";
+        selector.appendChild(opt);
+      });
+      
+      if (!emisorActivoId || !emisores.some(e => e.id == emisorActivoId)) {
+        emisorActivoId = emisores[0].id;
+      }
+      selector.value = emisorActivoId;
+      aplicarEmisorActivo();
+    }
+
+    function aplicarEmisorActivo() {
+      const emisor = emisores.find(e => e.id == emisorActivoId);
+      if (!emisor) return;
+      document.getElementById("emisorNombre").value = emisor.nombre || "";
+      document.getElementById("emisorCedula").value = emisor.cedula || "";
+      document.getElementById("emisorCorreo").value = emisor.correo || "";
+      document.getElementById("emisorTelefono").value = emisor.telefono || "";
+      document.getElementById("firmaDigital").value = "Firmado digitalmente por " + (emisor.nombre || "");
+      actualizarNumeroFacturaAutomatico();
+      renderListaFacturas();
+    }
+
+    function guardarEmisorActivo() {
+      const emisor = emisores.find(e => e.id == emisorActivoId);
+      if (!emisor) return;
+      emisor.nombre = document.getElementById("emisorNombre").value.trim();
+      emisor.cedula = document.getElementById("emisorCedula").value.trim();
+      emisor.correo = document.getElementById("emisorCorreo").value.trim();
+      emisor.telefono = document.getElementById("emisorTelefono").value.trim();
+      localStorage.setItem("emisoresCR", JSON.stringify(emisores));
+      cargarEmisores();
+    }
+
+    function renderItems() {
+      const tbody = document.querySelector("#tablaItems tbody");
+      tbody.innerHTML = "";
+      items.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.descripcion}</td>
+          <td>${item.cabys || "-"}</td>
+          <td>${item.cantidad}</td>
+          <td>${formatoMoneda(item.precio)}</td>
+          <td>${item.exonerado === "si" ? "Exonerado" : item.iva + "%"}</td>
+          <td>${formatoMoneda(item.subtotal + item.ivaMonto)}</td>
+          <td><button type="button" data-index="${index}">Eliminar</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click",<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Facturación CR – Multiusuario tipo Alegra (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(145deg, #020617 0, #0b1120 40%, #020617 100%);
+      border-radius: 18px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.9);
+      padding: 24px 24px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.12) 0, transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(34, 197, 94, 0.12) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0%, #38bdf8 0, #0ea5e9 35%, #1e293b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b1120;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.4), 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+    .brand-title {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 18px;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .pill span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+    .user-switch {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .user-switch select {
+      min-width: 180px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 16px 16px 18px;
+      backdrop-filter: blur(18px);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    input, select, textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 8px 10px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .items-table th,
+    .items-table td {
+      padding: 6px 4px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      text-align: left;
+    }
+    .items-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .items-table td:last-child {
+      text-align: right;
+    }
+    .items-table td button {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+    .items-table td button:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--accent) 0, var(--accent-soft) 100%);
+      color: #0b1120;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.35);
+      margin-top: 6px;
+    }
+    .btn.secondary {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: none;
+    }
+    .btn.full {
+      width: 100%;
+      justify-content: center;
+    }
+    .btn.small {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
+    }
+    .totals {
+      margin-top: 10px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.9);
+      padding-top: 10px;
+      font-size: 13px;
+    }
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .totals-row span:first-child {
+      color: var(--muted);
+    }
+    .totals-row span:last-child {
+      font-weight: 600;
+    }
+    .totals-row.total span:last-child {
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .footer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status strong {
+      color: var(--accent);
+    }
+    .panel {
+      margin-top: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 14px 16px 16px;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .panel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .panel-table th,
+    .panel-table td {
+      padding: 6px 4px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      text-align: left;
+    }
+    .panel-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .qr-box {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .qr-box img {
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: #020617;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">CR</div>
+        <div>
+          <div class="brand-title">Facturación Costa Rica – Demo tipo Alegra</div>
           <div class="brand-sub">Multiusuario, IVA, CAByS, XML simulado, QR y firma digital (no conectado a Hacienda)</div>
         </div>
       </div>
