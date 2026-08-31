@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Profesional de Facturación Electrónica CR - Mulltidigitalcr</title>
+    <style>
+        :root {
+            --bg-color: #08090d;
+            --card-bg: #121620;
+            --primary-blue: #1d4ed8;
+            --accent-blue: #3b82f6;
+            --accent-red: #dc2626;
+            --accent-red-hover: #b91c1c;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --border-color: #1e293b;
+            --table-header: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        h1, h2, h3 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-red);
+            padding-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-red);
+            padding-left: 10px;
+            color: #ffffff;
+        }
+
+        .section-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #08090d;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-top: 5px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: white;
+            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+        }
+
+        .btn-danger {
+            background: var(--accent-red);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            width: auto;
+            font-weight: bold;
+        }
+
+        .btn-danger:hover {
+            background: var(--accent-red-hover);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #15803d, #16a34a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #166534, #15803d);
+        }
+
+        .btn-secondary {
+            background: #1e293b;
+            color: white;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+            border-color: var(--accent-blue);
+        }
+
+        /* Tabla responsive */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--text-muted);
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 2px solid var(--accent-red);
+            font-size: 0.75rem;
+            background: var(--table-header);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Totales Box */
+        .totales-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 15px;
+        }
+
+        @media(max-width: 768px) {
+            .totales-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .totales-box {
+            background: #08090d;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .total-row.final {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            font-weight: bold;
+            border-top: 2px dashed var(--accent-red);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .qr-container {
+            text-align: center;
+            background: #08090d;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            color: black;
+            font-family: monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .container { box-shadow: none; border: none; max-width: 100%; padding: 0; background: white; color: black; }
+            .no-print { display: none !important; }
+            input, select, textarea { border: 1px solid #ccc; background: white; color: black; }
+            h1, h2 { color: #000 !important; border-color: #dc2626 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mulltidigitalcr – Facturación Electrónica CR</h1>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 20px;">
+            Sistema Multiplataforma adaptado a Normativa DGT (Costa Rica) • Desarrollado por Mulltidigitalcr
+        </p>
+
+        <!-- 1. ENCABEZADO Y TIPO DE DOCUMENTO -->
+        <div class="section-box">
+            <h2>1. Datos del Comprobante y Emisor</h2>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="selectTipoDoc">Tipo de Comprobante</label>
+                    <select id="selectTipoDoc" onchange="generarClaveYConsecutivo()">
+                        <option value="01">01 - Factura Electrónica</option>
+                        <option value="04">04 - Tiquete Electrónico</option>
+                        <option value="02">02 - Nota de Débito</option>
+                        <option value="03">03 - Nota de Crédito</option>
+                    </select>
+                </div>
+                <div class="form-group col">
+                    <label for="inputConsecutivo">Consecutivo (20 Dígitos)</label>
+                    <input type="text" id="inputConsecutivo" value="00100001010000000001" readonly>
+                </div>
+                <div class="form-group col">
+                    <label for="selectMedioPago">Medio de Pago</label>
+                    <select id="selectMedioPago">
+                        <option value="01">01 - Efectivo</option>
+                        <option value="02">02 - Tarjeta</option>
+                        <option value="04">04 - Transferencia - Sinpe Móvil</option>
+                        <option value="03">03 - Cheque</option>
+                        <option value="05">05 - Crédito</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="inputEmisorNombre">Nombre Emisor</label>
+                    <input type="text" id="inputEmisorNombre" value="Mulltidigitalcr S.A." oninput="generarClaveYConsecutivo()">
+                </div>
+                <div class="form-group col">
+                    <label for="inputEmisorCedula">Cédula Emisor (10 Dígitos)</label>
+                    <input type="text" id="inputEmisorCedula" value="3101999999" oninput="generarClaveYConsecutivo()">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. DATOS DEL CLIENTE -->
+        <div class="section-box">
+            <h2>2. Receptor / Cliente</h2>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="inputClienteNombre">Nombre / Razón Social</label>
+                    <input type="text" id="inputClienteNombre" value="Cliente General CR">
+                </div>
+                <div class="form-group col">
+                    <label for="selectClienteIdTipo">Tipo Identificación</label>
+                    <select id="selectClienteIdTipo">
+                        <option value="01">01 - Cédula Física</option>
+                        <option value="02">02 - Cédula Jurídica</option>
+                        <option value="03">03 - DIMEX</option>
+                        <option value="04">04 - NITE</option>
+                    </select>
+                </div>
+                <div class="form-group col">
+                    <label for="inputClienteIdNum">Número Identificación</label>
+                    <input type="text" id="inputClienteIdNum" value="100000000">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="inputClienteEmail">Correo Electrónico (Recepción)</label>
+                    <input type="email" id="inputClienteEmail" value="facturacion@mulltidigitalcr.com">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. AGREGAR LÍNEAS / ÍTEMS CON CABYS E IVA -->
+        <div class="section-box no-print">
+            <h2>3. Detalle de Líneas (Productos / Servicios)</h2>
+            <div class="form-group">
+                <label for="inputDesc">Descripción del Producto / Servicio</label>
+                <input type="text" id="inputDesc" placeholder="Ej. Soporte técnico especializado o desarrollo web">
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="inputCabys">Código CABYS (13 dígitos)</label>
+                    <input type="text" id="inputCabys" value="8314100000100">
+                </div>
+                <div class="form-group col">
+                    <label for="inputCantidad">Cantidad</label>
+                    <input type="number" id="inputCantidad" value="1" min="0.01" step="any">
+                </div>
+                <div class="form-group col">
+                    <label for="inputPrecio">Precio Unitario (₡)</label>
+                    <input type="number" id="inputPrecio" value="50000" min="0" step="any">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="selectTarifaIva">Tarifa IVA</label>
+                    <select id="selectTarifaIva">
+                        <option value="0.13">13% – General</option>
+                        <option value="0.04">4% – Servicios de Salud</option>
+                        <option value="0.02">2% – Medicamentos / Agro</option>
+                        <option value="0.01">1% – Canasta Básica</option>
+                        <option value="0.00">0% – Exento</option>
+                    </select>
+                </div>
+                <div class="form-group col">
+                    <label for="inputDescuentoPct">Descuento (%)</label>
+                    <input type="number" id="inputDescuentoPct" value="0" min="0" max="100" step="any">
+                </div>
+            </div>
+            <button type="button" id="btnAgregarItem" class="btn btn-primary">+ Agregar línea a la factura</button>
+        </div>
+
+        <!-- TABLA DE LÍNEAS -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>DESC.</th>
+                        <th>CABYS</th>
+                        <th>CANT.</th>
+                        <th>PRECIO UNIT.</th>
+                        <th>DESC.</th>
+                        <th>SUBTOTAL</th>
+                        <th>IVA</th>
+                        <th>TOTAL LÍNEA</th>
+                        <th class="no-print">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaItemsBody">
+                    <!-- Dinámico -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. TOTALES Y QR -->
+        <div class="totales-grid">
+            <div class="totales-box">
+                <div class="total-row">
+                    <span>Serv. Gravados:</span>
+                    <span id="lblServGravados">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Serv. Exentos:</span>
+                    <span id="lblServExentos">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Merc. Gravadas:</span>
+                    <span id="lblMercGravadas">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Merc. Exentas:</span>
+                    <span id="lblMercExentas">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="lblSubtotalGral">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Descuentos:</span>
+                    <span id="lblTotalDescuentos">₡0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Total IVA:</span>
+                    <span id="lblTotalIva">₡0.00</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total Comprobante:</span>
+                    <span id="lblTotalComprobante">₡0.00</span>
+                </div>
+            </div>
+
+            <div class="qr-container">
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: bold;">Clave Criptográfica DGT (50 Dígitos CR)</span>
+                <div class="qr-code-box" id="lblClaveHacienda">
+                    50624082600310199999900100001010000000001183141001
+                </div>
+                <div style="font-size: 0.75rem; color: var(--success); margin-top: 8px; font-weight: bold;">
+                    ● Estándar V4.3 Simulado — no válido ante Hacienda
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. ACCIONES DE GUARDADO Y EXPORTACIÓN -->
+        <div class="section-box no-print" style="margin-top: 20px;">
+            <h2>5. Acciones y Emisión</h2>
+            <div class="row">
+                <div class="col">
+                    <button type="button" id="btnGuardar" class="btn btn-success">💾 Guardar en Historial</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-secondary" onclick="exportarJson()">💻 Ver JSON Oficial</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-secondary" onclick="exportarXml()">📄 Ver XML Hacienda</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / PDF</button>
+                </div>
+            </div>
+            <div id="mensajeStorage" style="text-align: center; font-size: 0.85rem; color: var(--warning); margin-top: 10px;"></div>
+        </div>
+
+        <!-- 6. HISTORIAL DE FACTURAS GUARDADAS -->
+        <div class="section-box no-print">
+            <h2>6. Historial de Facturas Emitidas (LocalStorage)</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CONSECUTIVO</th>
+                            <th>FECHA</th>
+                            <th>CLIENTE</th>
+                            <th>TOTAL</th>
+                            <th class="no-print">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaHistorialBody">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'mulltidigitalcr_facturas_v1';
+
+        let itemsFactura = [
+            {
+                id: 1,
+                descripcion: "Soporte Técnico y Consultoría en Desarrollo Web",
+                cabys: "8314100000100",
+                cantidad: 1,
+                precioUnitario: 50000,
+                descuentoPct: 0,
+                tarifaIva: 0.13,
+                montoDescuento: 0,
+                subtotal: 50000,
+                montoIva: 6500,
+                totalLinea: 56500,
+                esServicio: true
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generarClaveYConsecutivo();
+            renderizarTablaItems();
+            calcularTotales();
+            cargarHistorialFacturas();
+
+            document.getElementById('btnAgregarItem').addEventListener('click', agregarLinea);
+            document.getElementById('btnGuardar').addEventListener('click', guardarFactura);
+            document.getElementById('selectTipoDoc').addEventListener('change', generarClaveYConsecutivo);
+        });
+
+        /* ---------------------------------------------------------------
+           Formato de moneda en colones costarricenses
+        --------------------------------
